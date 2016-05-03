@@ -28,6 +28,7 @@ Number of valence electrons
 Elapsed Time
 Memory
 '''
+
 raw_features = ['incar/nbands','incar/isif','incar/ibrion','incar/nsw','incar/ismear','incar/sigma','incar/ispin','incar/algo','incar/gga','results/type','incar/encut','input/kpts/0','input/kpts/1','input/kpts/2','incar/prec','input/xc','data/volume','results/elapsed-time','results/memory-used']
 calc_features = ['natoms','type_of_atoms','n_val_electrons','n_relaxed_atoms']
 
