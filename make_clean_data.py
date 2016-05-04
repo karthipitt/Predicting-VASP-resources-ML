@@ -32,18 +32,20 @@ Memory
 raw_features = ['incar/nbands','incar/isif','incar/ibrion','incar/nsw','incar/ismear','incar/sigma','incar/ispin','incar/algo','incar/gga','results/type','incar/encut','input/kpts/0','input/kpts/1','input/kpts/2','incar/prec','input/xc','data/volume','results/elapsed-time','results/memory-used']
 calc_features = ['natoms','type_of_atoms','n_val_electrons','n_relaxed_atoms']
 
+# Total Number of atoms for each observation
 atom_cols = [col for col in df if 'atoms/symbols' in col]
 atoms_df = df[atom_cols] 
-tot_atoms = atoms_df.count(axis=1) #Total Number of atoms in each calculation
+tot_atoms = atoms_df.count(axis=1) 
 tot_atoms.name = 'total_atoms'
 
+# Unique atom types for each observation
 def cunique(row):
     rmnan = [g for g in row if not pd.isnull(g)] 
     return [(g[0], len(list(g[1]))) for g in itertools.groupby(rmnan) ]
 
 atom_list = atoms_df.apply(func=cunique,axis=1) 
 
-# Returns a dictionary with number of valence electrons of each atom
+# Dictionary of number of valence electrons of each atom
 def nval_ele():
     val_e_dict = {}
     pp = os.environ['VASP_PP_PATH']
@@ -62,7 +64,7 @@ def nval_ele():
 
 val_e_dict = nval_ele()    
 
-# Calculate number of valence electrons and append it to dataframe
+# Calculate number of valence electrons for each observation
 def calc_val_electrons(row):
     val_e = 0
     for elem in row:
@@ -73,26 +75,6 @@ def calc_val_electrons(row):
 atom_val_e = atom_list.apply(func=calc_val_electrons)
 atom_val_e.name='total_val_ele'
 
-## Number of constrained atoms
-#f = open('vasp-ml.json')
-#d = json.loads(f.read())
-#
-#cons_atoms = []
-#for i,x in enumerate(d):
-#    print tot_atoms[i],
-#    if 'atoms.constraints' in x['metadata'].keys():
-#        constraints = pickle.loads(x['metadata']['atoms.constraints'].encode('utf-8'))
-#        cons = constraints[0].index
-#        if isinstance(cons[2],int):
-#            cons_atoms.append(len(cons))
-#        else:
-#            cons_atoms.append(sum(cons))
-#    else:
-#        cons_atoms.append(0)
-
-#print df['metadata/atoms.constraints'].apply(lambda x: pickle.loads(x.encode('utf-8')))
-
-
 # Handling missing values of each feature
 all_data = pd.concat([df[raw_features],tot_atoms,atom_val_e],axis=1)
 fill_defaults = {'incar/isif':2,'incar/ibrion':0,'incar/nsw':0,'incar/ismear':1,'incar/sigma':0.2,'incar/ispin':1,'incar/algo':'N','incar/gga':'PE','incar/prec':'Normal'}
@@ -100,7 +82,7 @@ fill_defaults = {'incar/isif':2,'incar/ibrion':0,'incar/nsw':0,'incar/ismear':1,
 for key in fill_defaults:
     all_data[key] = all_data[key].fillna(fill_defaults[key])
 
-# Rename columns to make labels visible while plotting
+# Renaming columns to make labels visible while plotting
 for col in all_data:
     new_col_name = col.split('/')[-1]
     all_data = all_data.rename(columns={col:new_col_name})
@@ -111,4 +93,4 @@ all_data = all_data.rename(columns={'2':'kp2'})
 
 all_data['elapsed-time'] = all_data['elapsed-time']/60
    
-#all_data.to_csv('clean_data.csv',index=False) 
+all_data.to_csv('clean_data.csv',index=False) 
