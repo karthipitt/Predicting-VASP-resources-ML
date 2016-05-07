@@ -1,5 +1,4 @@
 * Predicting High Performance Computing resources for VASP using Machine Learning
-- Karthikeyan Saravanan
 
 - Final project submitted to Materials modeling course offered at CMU by Dr. Kitchin.  
 
