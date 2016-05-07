@@ -1,0 +1,12 @@
+* Predicting High Performance Computing resources for VASP using Machine Learning
+- Karthikeyan Saravanan
+
+- Final project submitted to Materials modeling course offered at CMU by Dr. Kitchin.  
+
+- This is the first project in which I have gone through the entire data analysis workflow - cleaning dataset, feature engineering and machine learning predictions.   
+* Background to VASP
+Vienna Ab initio Simulations Package (VASP) is a software which uses quantum mechanics to understand properties of molecules and materials. VASP calculations are expensive and time for each calculation scales with the number of electrons of the material that is studied. VASP is a highly parallelized code and is usually run in a high performance computing (HPC) facility. 
+* PBS and requesting HPC resources
+HPC facilities host a job management software, PBS, which prioritizes a job submitted to the facility based on requested resources and the order in which it was received, in addition to several other factors. PBS also lets some jobs ahead of other jobs in the queue which are delayed due to lack of resources. This necessitates the need for requesting optimal resources while submitting a job to any HPC facility. 
+* Using Machine Learning to predict HPC resources
+Time or memory required for a VASP calculation depends primarily on size of the system and secondarily on calculation parameters. VASP calculations can get quite expensive as the system size increases and requesting optimal HPC resources becomes important while submitting a VASP job. In this project, Machine Learning models were trained from a labeled dataset containing time, memory and calculation parameters of around 300 VASP calculations. The model was then used to predict the wall time and memory required for a new VASP calculation.  
